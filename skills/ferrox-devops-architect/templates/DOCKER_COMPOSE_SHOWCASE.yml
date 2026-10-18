@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # Ferrox Core Application Service
+  # ----------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ferrox-app-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=info,ferrox=debug
+      - KAFKA_BROKERS=redpanda:9092
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgres://ferrox:ferrox_secret@postgres:5432/ferrox_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
+    networks:
+      - ferrox-mesh
+
+  # ----------------------------------------------------------------------------
+  # Redpanda: High-Throughput C++ Kafka-Compatible Event Broker
+  # ----------------------------------------------------------------------------
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.1.2
+    container_name: ferrox-redpanda
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --check=false
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+    ports:
+      - "9092:9092"
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -i healthy || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ferrox-mesh
+
+  # ----------------------------------------------------------------------------
+  # Redis: High-Availability Cache & Distributed Redlock Engine
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: ferrox-redis
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "512mb", "--maxmemory-policy", "volatile-lru"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ferrox-mesh
+
+  # ----------------------------------------------------------------------------
+  # PostgreSQL: Transactional ACID Relational Store with Outbox Table
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: ferrox-postgres
+    environment:
+      POSTGRES_USER: ferrox
+      POSTGRES_PASSWORD: ferrox_secret
+      POSTGRES_DB: ferrox_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ferrox -d ferrox_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ferrox-mesh
+
+networks:
+  ferrox-mesh:
+    driver: bridge

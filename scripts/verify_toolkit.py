@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Ferrox Agent Toolkit Self-Verification Test Suite (Dual-Layer Architecture)
+Ferrox Agent Toolkit Self-Verification Test Suite
 Verifies:
 1. JSON manifest syntax and structure (plugin.json, agents.json, openpack.json)
-2. All 14 rules exist and are non-empty
-3. All 13 skills exist with valid YAML frontmatter ('---', name, description)
-4. All 7 specialized agent specifications exist and are non-empty
-5. Key templates and scripts exist
+2. All 19 rules exist and are non-empty
+3. All 19 skills exist with valid YAML frontmatter ('---', name, description)
+4. All 10 specialized agent specifications exist and are non-empty
+5. Key templates and CLI scripts exist
 """
 
 import sys
@@ -37,10 +37,16 @@ def test_toolkit_integrity():
             else:
                 print(f"  [OK] Root Document Present: {m}")
 
-    # 2. Check all 14 rules (High-Level Agnostic + Low-Level Runtime)
+    # 2. Check all 19 rules (5 Governance + 8 Agnostic + 6 Runtime)
     rules_dir = root / "rules"
     expected_rules = [
-        # High-Level Agnostic Rules
+        # Governance & Lifecycle
+        "ferrox-agile-scrum-lifecycle.md",
+        "ferrox-first-dependency-policy.md",
+        "ferrox-git-lifecycle-governance.md",
+        "ferrox-self-review-standards.md",
+        "ferrox-devops-infrastructure-iac.md",
+        # High-Level Architecture & Quality
         "ferrox-ddd-architecture.md",
         "ferrox-tdd-100-percent.md",
         "ferrox-sentinel-security.md",
@@ -49,7 +55,7 @@ def test_toolkit_integrity():
         "ferrox-interop-connectors.md",
         "ferrox-polyglot-paradigms.md",
         "ferrox-e2e-contract-testing.md",
-        # Low-Level Runtime Specific Rules
+        # Low-Level Runtime Guidelines
         "ferrox-rust-guidelines.md",
         "ferrox-wasm-guidelines.md",
         "ferrox-typescript-nestjs-guidelines.md",
@@ -65,10 +71,17 @@ def test_toolkit_integrity():
         else:
             print(f"  [OK] Rule: {r} ({p.stat().st_size} bytes)")
 
-    # 3. Check all 13 skills and YAML frontmatter
+    # 3. Check all 19 skills and YAML frontmatter
     skills_dir = root / "skills"
     expected_skills = [
-        # High-Level Agnostic Skills
+        # Governance & DevOps
+        "ferrox-scrum-master",
+        "ferrox-dep-resolver",
+        "ferrox-forge-lifecycle",
+        "ferrox-self-reviewer",
+        "ferrox-devops-architect",
+        "ferrox-showcase-generator",
+        # High-Level Architecture
         "ferrox-ddd-planner",
         "ferrox-tdd-orchestrator",
         "ferrox-e2e-scaffolder",
@@ -76,7 +89,7 @@ def test_toolkit_integrity():
         "ferrox-polyglot-connector",
         "ferrox-code-reviewer",
         "ferrox-workflow-handoff",
-        # Low-Level Runtime Specific Skills
+        # Low-Level Runtime Implementers
         "ferrox-rust-implementer",
         "ferrox-wasm-builder",
         "ferrox-nestjs-implementer",
@@ -98,9 +111,12 @@ def test_toolkit_integrity():
             else:
                 print(f"  [OK] Skill with Valid Frontmatter: {s}")
 
-    # 4. Check all 7 specialized agents
+    # 4. Check all 10 specialized agents
     agents_dir = root / "agents"
     expected_agents = [
+        "ferrox-master-orchestrator.md",
+        "ferrox-devops-deployer.md",
+        "ferrox-quality-gatekeeper.md",
         "ferrox-architect-ddd.md",
         "ferrox-tdd-engineer.md",
         "ferrox-security-sentinel.md",
@@ -117,7 +133,7 @@ def test_toolkit_integrity():
         else:
             print(f"  [OK] Agent Persona: {a}")
 
-    # 5. Check CLI tools
+    # 5. Check CLI tools and scripts
     scripts_dir = root / "scripts"
     expected_scripts = [
         "check_coverage.py",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "name": "ferrox-rs/ferrox-agent-toolkit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "provides": [
     {
       "type": "rules",
@@ -23,6 +23,21 @@
         },
         "ferrox-contract-governance.md": {
           "requires": ["skills/ferrox-polyglot-connector"]
+        },
+        "ferrox-first-dependency-policy.md": {
+          "requires": ["skills/ferrox-dep-resolver"]
+        },
+        "ferrox-agile-scrum-lifecycle.md": {
+          "requires": ["skills/ferrox-scrum-master"]
+        },
+        "ferrox-git-lifecycle-governance.md": {
+          "requires": ["skills/ferrox-forge-lifecycle"]
+        },
+        "ferrox-self-review-standards.md": {
+          "requires": ["skills/ferrox-self-reviewer"]
+        },
+        "ferrox-devops-infrastructure-iac.md": {
+          "requires": ["skills/ferrox-devops-architect"]
         },
         "ferrox-rust-guidelines.md": {
           "requires": ["skills/ferrox-rust-implementer"]
@@ -57,6 +72,24 @@
       "type": "skills",
       "path": "skills",
       "items": {
+        "ferrox-scrum-master": {
+          "description": "Autonomous Scrum Master decomposing briefs into Sprint Backlog with DoR and DoD gates."
+        },
+        "ferrox-dep-resolver": {
+          "description": "Intelligent dependency resolver enforcing Ferrox-First policy on project manifests."
+        },
+        "ferrox-forge-lifecycle": {
+          "description": "Automates remote forge interactions via gh/glab: Milestones, Issues, branch, CodeRabbit, and PR to master."
+        },
+        "ferrox-self-reviewer": {
+          "description": "Disciplined pre-submission self-reviewer inspecting diffs for debug debris and architectural purity."
+        },
+        "ferrox-devops-architect": {
+          "description": "Architects multi-stage distroless Dockerfiles, Redpanda/Kafka & Redis docker-compose, and Terraform IaC."
+        },
+        "ferrox-showcase-generator": {
+          "description": "Scaffolds complete end-to-end showcase applications with ferrox-front Wasm UI and ferrox-codex documentation."
+        },
         "ferrox-ddd-planner": {
           "description": "Domain-Driven Design planner for bounded contexts, aggregate roots, value objects, and domain events."
         },

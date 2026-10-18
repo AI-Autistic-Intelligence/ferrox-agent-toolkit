@@ -1,0 +1,57 @@
+# CodeRabbit AI Code Review Configuration for Ferrox Ecosystem
+# Schema Version: 2
+
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "master"
+      - "main"
+
+  # Path filters
+  path_filters:
+    - "!target/**"
+    - "!node_modules/**"
+    - "!vendor/**"
+    - "!**/*.lock"
+    - "!dist/**"
+    - "!pkg/**"
+
+  # Ferrox Custom Rule Prompting
+  prompt_instructions: |
+    You are an uncompromising Lead Systems Architect auditing a Pull Request for the high-performance Ferrox polyglot ecosystem.
+    Strictly review and flag changes against these core rules:
+    
+    1. DOMAIN-DRIVEN DESIGN PURITY:
+       - Ensure `domain/` packages have ZERO imports from databases (TypeORM, SQLx, Hibernate, Diesel), HTTP frameworks, or external serialization.
+       - Verify that Aggregate Roots protect invariants atomically and Value Objects are immutable.
+    
+    2. ZERO TOLERANCE FOR DEBUG DEBRIS:
+       - Flag any instance of `dbg!`, `println!`, `todo!`, `unimplemented!`, `console.log`, `print()`, `var_dump()`, or `System.out.println`.
+    
+    3. RUST ZERO-ALLOC & SAFETY:
+       - Flag any `unwrap()` or `expect()` in production code paths.
+       - Verify `#![forbid(unsafe_code)]` or mandatory `// SAFETY:` proofs.
+       - Enforce zero-copy buffer slicing (`bytes::Bytes`, `&[u8]`).
+    
+    4. SECURITY SENTINEL (OWASP WSTG):
+       - Verify that PASETO v4 local tokens bind footers as Additional Authenticated Data (AAD).
+       - Ensure token verification enforces maximum 10-second clock skew tolerance.
+       - Flag any potential timing side-channel; enforce constant-time comparisons for secrets.
+       - Ensure concurrent state mutations on finite resources are protected by distributed locks (Redis Redlock / DB row locks).
+    
+    5. TEST-DRIVEN COVERAGE:
+       - Flag any PR that introduces business logic without corresponding unit tests covering all edge-case branches.
+
+chat:
+  auto_reply: true
