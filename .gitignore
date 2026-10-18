@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+coverage.xml
+lcov.info
+target/
+node_modules/
+vendor/
+.agents/plans/
