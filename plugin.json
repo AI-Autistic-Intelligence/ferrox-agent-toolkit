@@ -1,0 +1,30 @@
+{
+  "name": "ferrox-agent-toolkit",
+  "displayName": "Ferrox Agent Toolkit",
+  "version": "1.0.0",
+  "description": "Enterprise AI Agent Toolkit optimized for the Ferrox polyglot ecosystem (Rust, Rust Wasm, TypeScript/NestJS, Python, Java Loom, PHP). Specializes in Domain-Driven Design (DDD), strict TDD with 100% coverage, E2E chaos/edge-case resilience, and OWASP WSTG Sentinel security auditing.",
+  "author": {
+    "name": "Ferrox Core Team",
+    "email": "security@ferrox-rust.dev"
+  },
+  "homepage": "https://ferrox-rust.dev",
+  "repository": "https://github.com/ferrox-rs/ferrox-agent-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "ferrox",
+    "ddd",
+    "tdd",
+    "100-percent-coverage",
+    "e2e-testing",
+    "owasp-wstg",
+    "security-sentinel",
+    "paseto-v4",
+    "polyglot",
+    "rust",
+    "wasm",
+    "nestjs-yalc",
+    "python",
+    "java-loom",
+    "php-saga"
+  ]
+}

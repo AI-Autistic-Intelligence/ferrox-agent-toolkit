@@ -1,0 +1,25 @@
+{
+  "agents": {
+    "antigravity": {
+      "plugins_dir": "~/.gemini/config/plugins",
+      "skills_dir": "~/.gemini/config/skills",
+      "rules_dir": "~/.gemini/config/rules",
+      "auto_update": false
+    },
+    "claude": {
+      "skills_dir": "~/.claude/skills",
+      "rules_dir": "~/.claude/rules",
+      "auto_update": true
+    },
+    "copilot": {
+      "instructions_dir": ".github/instructions",
+      "rules_dir": ".agents/rules",
+      "auto_update": false
+    },
+    "opencode": {
+      "skills_dir": "~/.config/opencode/skills",
+      "rules_dir": "~/.config/opencode/rules",
+      "auto_update": false
+    }
+  }
+}

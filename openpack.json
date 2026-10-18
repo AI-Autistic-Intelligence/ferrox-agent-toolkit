@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "name": "ferrox-rs/ferrox-agent-toolkit",
+  "version": "1.0.0",
+  "provides": [
+    {
+      "type": "rules",
+      "path": "rules",
+      "format": "markdown-rule",
+      "runtimes": ["antigravity", "claude", "copilot", "opencode"],
+      "items": {
+        "ferrox-ddd-architecture.md": {
+          "requires": ["skills/ferrox-ddd-planner"]
+        },
+        "ferrox-tdd-100-percent.md": {
+          "requires": ["skills/ferrox-tdd-orchestrator"]
+        },
+        "ferrox-e2e-contract-testing.md": {
+          "requires": ["skills/ferrox-e2e-scaffolder"]
+        },
+        "ferrox-sentinel-security.md": {
+          "requires": ["skills/ferrox-security-auditor"]
+        },
+        "ferrox-polyglot-paradigms.md": {
+          "requires": ["skills/ferrox-polyglot-connector"]
+        },
+        "ferrox-interop-connectors.md": {
+          "requires": ["skills/ferrox-polyglot-connector"]
+        }
+      }
+    },
+    {
+      "type": "skills",
+      "path": "skills",
+      "items": {
+        "ferrox-ddd-planner": {
+          "description": "Domain-Driven Design planner for bounded contexts, aggregate roots, value objects, and domain events."
+        },
+        "ferrox-tdd-orchestrator": {
+          "description": "Strict TDD red-green-refactor loop enforcing 100% line, branch, and condition coverage."
+        },
+        "ferrox-e2e-scaffolder": {
+          "description": "Scaffolds and runs resilient E2E scenarios, race condition tests, and distributed saga compensation checks."
+        },
+        "ferrox-security-auditor": {
+          "description": "OWASP WSTG automated pentest sentinel checking Shannon entropy, PASETO v4 crypto, rate limits, and timing attacks."
+        },
+        "ferrox-polyglot-connector": {
+          "description": "Builds and validates cross-language bridges across Rust, Wasm, TypeScript/NestJS, Python, Java Loom, and PHP."
+        },
+        "ferrox-code-reviewer": {
+          "description": "Rigorous code review against Ferrox DDD purity, 100% test coverage, and Sentinel security requirements."
+        },
+        "ferrox-workflow-handoff": {
+          "description": "Generates production-ready handoff documentation preserving domain decisions and audit logs."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package dev.ferrox.connector.v1;
+
+option java_multiple_files = true;
+option java_package = "dev.ferrox.connector.v1";
+option go_package = "dev/ferrox/connector/v1;connectorv1";
+
+// Universal Cross-Language Ferrox Service Contract
+service FerroxPolyglotBridge {
+  // Synchronous Command Execution across language runtimes
+  rpc ExecuteCommand (CommandEnvelope) returns (CommandResult);
+
+  // Synchronous Read-Model Query across language runtimes
+  rpc ExecuteQuery (QueryEnvelope) returns (QueryResult);
+
+  // Streaming Event Ingestion pipeline
+  rpc StreamEvents (stream EventEnvelope) returns (StreamAck);
+}
+
+message CommandEnvelope {
+  string command_id = 1;
+  string tenant_id = 2;
+  string command_type = 3;
+  int64 timestamp = 4;
+  bytes payload_bytes = 5;
+  map<string, string> metadata = 6;
+}
+
+message CommandResult {
+  string command_id = 1;
+  bool success = 2;
+  int32 status_code = 3;
+  string error_message = 4;
+  bytes result_bytes = 5;
+}
+
+message QueryEnvelope {
+  string query_id = 1;
+  string query_name = 2;
+  bytes query_params = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message QueryResult {
+  string query_id = 1;
+  bytes dataset_bytes = 2;
+  int32 total_records = 3;
+}
+
+message EventEnvelope {
+  string event_id = 1;
+  string source = 2;
+  string event_type = 3;
+  int64 timestamp = 4;
+  bytes data = 5;
+}
+
+message StreamAck {
+  int64 processed_count = 1;
+  bool active = 2;
+}

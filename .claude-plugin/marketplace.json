@@ -1,0 +1,7 @@
+{
+  "id": "ferrox-agent-toolkit",
+  "name": "Ferrox Agent Toolkit",
+  "category": "engineering",
+  "tags": ["ferrox", "ddd", "tdd", "security", "pentest", "polyglot", "rust", "typescript", "python", "java", "php"],
+  "summary": "Specialized multi-agent toolkit for DDD planning, TDD 100% coverage enforcement, E2E resilience, and OWASP WSTG security auditing in the Ferrox ecosystem."
+}
