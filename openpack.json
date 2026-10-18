@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "name": "ferrox-rs/ferrox-agent-toolkit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "provides": [
     {
       "type": "rules",
@@ -15,17 +15,41 @@
         "ferrox-tdd-100-percent.md": {
           "requires": ["skills/ferrox-tdd-orchestrator"]
         },
-        "ferrox-e2e-contract-testing.md": {
-          "requires": ["skills/ferrox-e2e-scaffolder"]
-        },
         "ferrox-sentinel-security.md": {
           "requires": ["skills/ferrox-security-auditor"]
+        },
+        "ferrox-e2e-chaos-resilience.md": {
+          "requires": ["skills/ferrox-e2e-scaffolder"]
+        },
+        "ferrox-contract-governance.md": {
+          "requires": ["skills/ferrox-polyglot-connector"]
+        },
+        "ferrox-rust-guidelines.md": {
+          "requires": ["skills/ferrox-rust-implementer"]
+        },
+        "ferrox-wasm-guidelines.md": {
+          "requires": ["skills/ferrox-wasm-builder"]
+        },
+        "ferrox-typescript-nestjs-guidelines.md": {
+          "requires": ["skills/ferrox-nestjs-implementer"]
+        },
+        "ferrox-python-pyo3-guidelines.md": {
+          "requires": ["skills/ferrox-python-implementer"]
+        },
+        "ferrox-php-guidelines.md": {
+          "requires": ["skills/ferrox-php-implementer"]
+        },
+        "ferrox-java-loom-panama-guidelines.md": {
+          "requires": ["skills/ferrox-java-implementer"]
         },
         "ferrox-polyglot-paradigms.md": {
           "requires": ["skills/ferrox-polyglot-connector"]
         },
         "ferrox-interop-connectors.md": {
           "requires": ["skills/ferrox-polyglot-connector"]
+        },
+        "ferrox-e2e-contract-testing.md": {
+          "requires": ["skills/ferrox-e2e-scaffolder"]
         }
       }
     },
@@ -53,6 +77,24 @@
         },
         "ferrox-workflow-handoff": {
           "description": "Generates production-ready handoff documentation preserving domain decisions and audit logs."
+        },
+        "ferrox-rust-implementer": {
+          "description": "High-performance, zero-alloc Tokio async implementations and lock-free data structures in Rust."
+        },
+        "ferrox-wasm-builder": {
+          "description": "Pure Rust WebAssembly reactive Signal frontends, SVG vector rendering, and wasm-opt binary optimization."
+        },
+        "ferrox-nestjs-implementer": {
+          "description": "Enterprise TypeScript & NestJS services conforming to YALC architecture, CQRS, and Node-API native bindings."
+        },
+        "ferrox-python-implementer": {
+          "description": "Python 3.12+ asyncio services, frozen Pydantic v2 models, and native PyO3 Rust extensions."
+        },
+        "ferrox-php-implementer": {
+          "description": "Modern PHP 8.3/8.4 services, distributed Saga coordinators, and PSR-15 middlewares."
+        },
+        "ferrox-java-implementer": {
+          "description": "Modern Java 21+ services with Project Loom Virtual Threads and Project Panama off-heap native FFI."
         }
       }
     }

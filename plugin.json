@@ -1,8 +1,8 @@
 {
   "name": "ferrox-agent-toolkit",
   "displayName": "Ferrox Agent Toolkit",
-  "version": "1.0.0",
-  "description": "Enterprise AI Agent Toolkit optimized for the Ferrox polyglot ecosystem (Rust, Rust Wasm, TypeScript/NestJS, Python, Java Loom, PHP). Specializes in Domain-Driven Design (DDD), strict TDD with 100% coverage, E2E chaos/edge-case resilience, and OWASP WSTG Sentinel security auditing.",
+  "version": "1.1.0",
+  "description": "Enterprise Dual-Layer AI Agent Toolkit for the Ferrox ecosystem. Layer 1: High-Level Agnostic DDD, strict TDD with 100% coverage, OWASP WSTG Sentinel Security, E2E Chaos Resilience, and Contract Governance. Layer 2: Low-Level Runtime Implementations for Rust Core, Rust Wasm, TypeScript/NestJS, Python PyO3, PHP 8.4 Saga, and Java 21 Loom/Panama.",
   "author": {
     "name": "Ferrox Core Team",
     "email": "security@ferrox-rust.dev"
@@ -15,16 +15,22 @@
     "ddd",
     "tdd",
     "100-percent-coverage",
+    "mutation-testing",
     "e2e-testing",
+    "chaos-engineering",
     "owasp-wstg",
     "security-sentinel",
     "paseto-v4",
-    "polyglot",
-    "rust",
-    "wasm",
+    "shannon-entropy",
+    "saga-pattern",
+    "transactional-outbox",
+    "protobuf-v3",
+    "cloudevents",
+    "rust-core",
+    "rust-wasm",
     "nestjs-yalc",
-    "python",
-    "java-loom",
+    "python-pyo3",
+    "java-loom-panama",
     "php-saga"
   ]
 }

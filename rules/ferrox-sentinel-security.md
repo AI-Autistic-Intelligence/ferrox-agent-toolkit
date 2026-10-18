@@ -52,6 +52,11 @@ Every security review or CI audit executed by the Security Sentinel agent must a
 - **Constant-Time Comparisons**: Token signatures, hashes, and passwords must be compared using constant-time comparison algorithms (`timingSafeEqual` in Node.js, `subtle.constant_time_eq` in Rust, `MessageDigest.isEqual` in Java) to eliminate side-channel timing attacks.
 - **Sealed Types & Zero-Allocation Buffers**: Sensitive credentials must be wrapped in zeroize-on-drop abstractions (`SealedToken`), clearing memory buffers immediately upon scope termination.
 
+### Vector 6: Injection, SSRF & ReDoS Mitigations (WSTG-INPV-07 / WSTG-INPV-11)
+- **SSRF Defense**: External webhook and URL fetchers must strictly prohibit loopback (`127.0.0.1`, `localhost`), link-local metadata addresses (`169.254.169.254`), and private RFC 1918 IPv4/IPv6 ranges. DNS resolution must be pinned to prevent DNS rebinding attacks.
+- **SQLi Elimination**: 100% parameterized queries. Dynamic SQL concatenation is strictly prohibited across all runtimes.
+- **ReDoS Elimination**: Regular expressions must avoid catastrophic backtracking (nested quantifiers like `(a+)+$`). Ingress patterns must be pre-compiled with timeout caps (e.g. 50ms) or use linear-time regular expression engines (Rust `regex`, Go `regexp`).
+
 ---
 
 ## 3. Security Audit Output Artifact
@@ -62,3 +67,4 @@ Every security verification executed by the agent must output a structured `SECU
 3. Runtime evaluated (`ferrox`, `ferrox-front`, `nestjs-yalc`, `ferrox-py`, `ferrox-java`, `ferrox-php`).
 4. Practical Business Risk description.
 5. Concrete Remediation diff.
+

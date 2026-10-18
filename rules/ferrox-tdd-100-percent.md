@@ -41,7 +41,7 @@ stateDiagram-v2
 ## 2. Test Classification & Mocking Rules
 
 1. **Domain Unit Tests (`test/unit/domain`)**:
-   - **Zero I/O Guarantee**: Pure domain tests must run completely in-memory in under 5 milliseconds.
+   - **Sub-5ms Execution Time**: Every pure domain unit test must execute completely in-memory in under 5 milliseconds. No network, no filesystem, no database.
    - No mock libraries for Domain Entities or Value Objects. Instantiate real instances.
    - Test every domain invariant, invalid argument exception, boundary condition, and domain event emission.
 
@@ -71,9 +71,33 @@ stateDiagram-v2
 
 ---
 
-## 4. Prohibited Testing Anti-Patterns
+## 4. Mutation Testing Standard (Kill All Mutants)
+
+Line and branch coverage alone does not guarantee assertion quality. To prevent "assert-free" tests or weak verifications, critical domain modules must pass **Mutation Testing**:
+
+```mermaid
+graph LR
+    Code[Source Code] --> Mutator[Mutation Engine: Invert Condition / Mutate Return]
+    Mutator --> Mutant[Mutant Code Spawned]
+    Mutant --> TestRun[Run TDD Test Suite]
+    TestRun -->|Tests Fail| Killed[Mutant Killed: SUCCESS]
+    TestRun -->|Tests Pass| Survived[Mutant Survived: TEST WEAKNESS DETECTED]
+```
+
+- **Mutation Score Target**: Minimum **85% Mutation Score Indicator (MSI)** on domain packages.
+- **Polyglot Mutation Tools**:
+  * **Rust**: `cargo mutants`
+  * **TypeScript**: `npx stryker run`
+  * **Python**: `mutmut run`
+  * **Java**: `mvn org.pitest:pitest-maven:mutationCoverage`
+  * **PHP**: `vendor/bin/infection --min-msi=85`
+
+---
+
+## 5. Prohibited Testing Anti-Patterns
 
 - ❌ **Testing implementation details**: Do not assert on private fields or private methods. Test observable public behavior and invariants.
 - ❌ **Mocking what you don't own**: Do not mock third-party libraries directly. Create an adapter port and mock the port.
 - ❌ **Shared mutable test state**: Every test must have isolated setup. No global singleton mutations across tests.
 - ❌ **Ignoring branch coverage**: Having 100% line coverage but 50% branch coverage is an immediate CI failure. Every `if / else`, `match`, `try / catch`, and early return must be explicitly exercised.
+

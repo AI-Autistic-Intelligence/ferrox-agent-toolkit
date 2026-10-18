@@ -1,137 +1,125 @@
-# Ferrox Engineering Master Handbook: DDD, TDD, E2E & Sentinel Security
+# Ferrox Engineering Master Handbook: Dual-Layer Polyglot Architecture
 
-This handbook is the authoritative engineering standard for building, testing, and securing services across the Ferrox polyglot ecosystem (Rust, Rust Wasm, TypeScript/NestJS, Python, Java 21 Loom, PHP).
+This handbook is the authoritative engineering specification for building, testing, and securing systems across the Ferrox polyglot ecosystem (Rust, Rust Wasm, TypeScript/NestJS, Python, PHP, Java 21 Loom & Panama).
 
 ---
 
-## 1. Architectural Philosophy: The 4-Pillar Pipeline
+## 1. The Dual-Layer Architecture
 
-Every feature, module, or service delivered in the Ferrox ecosystem must traverse four disciplined phases:
+The Ferrox Engineering Standard operates across two strictly separated, complementary layers:
 
 ```mermaid
 flowchart TD
-    subgraph Phase 1: Architecture
-        DDD[Domain-Driven Design Planning]
-        Ctx[Bounded Context & Ubiquitous Language]
-        Agg[Aggregate Roots & Invariants]
-        DDD --> Ctx --> Agg
+    subgraph Layer 1: High-Level Agnostic Architecture
+        DDD[Pillar 1: Domain-Driven Design Pure Core]
+        TDD[Pillar 2: Strict TDD 100% & Mutation Testing]
+        Chaos[Pillar 3: E2E Chaos Resilience & Distributed Sagas]
+        Sec[Pillar 4: OWASP WSTG Sentinel Security & Shannon Entropy]
+        Gov[Pillar 5: Contract Governance & Schema Versioning]
+        DDD --> TDD --> Chaos --> Sec --> Gov
     end
 
-    subgraph Phase 2: Implementation
-        Red[Write Failing Test First]
-        Green[Implement Minimal Code]
-        Refactor[Refactor Zero-Alloc]
-        Cov[100% Line & Branch Coverage Verified]
-        Red --> Green --> Refactor --> Cov
+    subgraph Layer 2: Low-Level Runtime Implementations
+        Gov --> Rust[Rust Core Server: Tokio, Zero-Alloc, Bytes]
+        Gov --> Wasm[Rust Wasm UI: Signal Reactivity, 60 FPS, SVG]
+        Gov --> TS[TypeScript & NestJS: YALC, CQRS, Node-API]
+        Gov --> Py[Python: asyncio, Pydantic v2, PyO3 FFI]
+        Gov --> PHP[PHP Modern: final readonly, Saga Steps, Infection]
+        Gov --> Java[Java 21+: Loom Virtual Threads, Panama FFI]
     end
-
-    subgraph Phase 3: Integration
-        Happy[Golden Path E2E Journey]
-        Chaos[Race Conditions & Saga Compensations]
-        Happy --> Chaos
-    end
-
-    subgraph Phase 4: Zero-Trust Security
-        WSTG[OWASP WSTG v4.2/v5.0 Audit]
-        Ent[Shannon Entropy Inspection H > 4.8]
-        Crypto[PASETO v4 AAD Footer & Key Guard]
-        Lock[Concurrency Locks & Singleflight]
-        WSTG --> Ent --> Crypto --> Lock
-    end
-
-    Agg ==> Red
-    Cov ==> Happy
-    Chaos ==> WSTG
 ```
 
 ---
 
-## 2. Pillar 1: Domain-Driven Design (DDD)
+## 2. Layer 1: High-Level Agnostic Pillars
 
-### 2.1 The Pure Domain Invariant
-The domain core must never contain infrastructure code. No database queries, no HTTP controllers, no framework annotations (such as TypeORM or Hibernate). Repositories are expressed strictly as domain interfaces/traits.
+### Pillar 1: Pure Domain-Driven Design (DDD)
+- **Pure Domain Core**: The domain core contains business entities, value objects, domain events, and repository ports. It has **zero imports** from database libraries (TypeORM, Hibernate, SQLx), web frameworks (NestJS, Spring, Axum), or external serialization.
+- **Aggregate Roots as Consistency Boundaries**: Aggregate roots are the sole entry point for mutating internal entities. State transitions must satisfy domain invariants atomically. External references hold only the aggregate's strongly typed ID.
+- **Value Objects**: Immutable and self-validating. Invalid state is rejected at construction time. Structural equality guarantees that two value objects with identical fields are equal.
+- **CQRS**: Commands express intent to mutate state and return `Result<Id, DomainError>`. Queries project read-only datasets and never mutate state.
 
-### 2.2 Aggregate Roots as Consistency Guardians
-- An Aggregate Root is the sole gatekeeper of its inner state.
-- Invariants must hold true before and after any public method execution.
-- External references must only hold the Aggregate's strongly typed ID (`OrderId`, `UserId`).
+### Pillar 2: Strict TDD, 100% Coverage & Mutation Testing
+- **Red-Green-Refactor**: Production code is written only to make a previously failing test pass.
+- **Execution Speed**: Pure domain tests must run completely in-memory in under 5 milliseconds.
+- **100% Coverage Mandate**: 100% Line, Branch, and Function coverage enforced via `check_coverage.py`.
+- **Mutation Testing**: Critical domain packages must achieve $\ge 85\%$ Mutation Score Indicator (MSI) using language mutation engines (`cargo mutants`, `stryker`, `infection`, `pitest`, `mutmut`), proving that tests detect and kill intentional code mutants.
 
-### 2.3 Value Objects
-- **Immutability**: Once created, state cannot change.
-- **Self-Validation**: Invariants are asserted in constructors/factories; invalid instances cannot exist.
-- **Structural Equality**: Equality is based on value attributes, not identity pointer.
+### Pillar 3: E2E Chaos Resilience & Distributed Sagas
+- **Distributed Saga Pattern**: Multi-service transactions coordinate forward actions and backward compensating actions. If any step fails, previous steps are automatically rolled back.
+- **Transactional Outbox Pattern**: Aggregate state updates and event publishing occur in a single atomic database transaction. An outbox relay guarantees at-least-once delivery to message brokers.
+- **Concurrency & Double-Spend Defense**: Finite resources (stock, seats, account balances) are guarded by Redis Redlock or database row locks (`SELECT ... FOR UPDATE`).
+- **Singleflight Deduplication**: High-traffic read operations coalesce simultaneous identical requests into 1 execution, eliminating cache stampedes.
+- **Circuit Breaker Fail-Fast**: Outbound dependencies trip from `CLOSED` to `OPEN` on consecutive faults, failing fast in sub-15ms without saturating worker threads.
 
-### 2.4 Polyglot Mapping Table
-| Construct | Rust | TypeScript (`nestjs-yalc`) | Python (`ferrox-py`) | Java (`ferrox-java`) | PHP (`ferrox-php`) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Value Object** | `struct Newtype(T)` | Immutable class | Frozen Pydantic v2 | Java 21 `record` | `final readonly class` |
-| **Aggregate** | Struct with private state | `@AggregateRoot()` class | Dataclass + private fields | Domain Class + UUID | Aggregate Root class |
-| **Domain Event** | Enum / typed struct | Class extending `DomainEvent` | Frozen Pydantic model | `sealed interface` | `DomainEventInterface` |
-| **Repository** | `pub trait Repo: Send + Sync`| Abstract class port | `typing.Protocol` | `public interface Repo` | `interface RepoInterface` |
+### Pillar 4: Ferrox Sentinel Security (OWASP WSTG v4.2 / v5.0)
+- **Shannon Entropy Inspection**:
+  $$H = - \sum_{i=1}^{n} P(c_i) \log_2 P(c_i)$$
+  Natural text scores $H \le 4.2$. Payloads exceeding $H > 4.8$ (obfuscated shellcode, polymorphic scripts, C2 beacons) are intercepted and rejected with HTTP 403 RFC 7807.
+- **PASETO v4 Cryptographic Hardening**:
+  * Weak / zero-entropy 256-bit symmetric keys rejected at boot.
+  * Footers authenticated via Additional Authenticated Data (AAD) in XChaCha20-Poly1305.
+  * Clock skew leeway strictly bounded to 10 seconds.
+- **Constant-Time Operations**: Secret comparisons use constant-time algorithms to eliminate timing side channels.
+- **SSRF & ReDoS Defense**: Prohibit private IP/loopback fetching; eliminate catastrophic regex backtracking.
 
----
-
-## 3. Pillar 2: Strict TDD & 100% Code Coverage
-
-### 3.1 The Red-Green-Refactor Cycle
-1. **Red**: Write a test testing an invariant. Execute the test and watch it fail.
-2. **Green**: Implement the simplest production code to make the test pass.
-3. **Refactor**: Eliminate duplication, optimize allocations, and align with idiomatic idioms.
-4. **Coverage Audit**: Execute `python scripts/check_coverage.py`. Enforce **100% line coverage and 100% branch coverage**.
-
-### 3.2 Mocking Boundaries
-- **Rule**: Mock only external ports (network APIs, queues, databases). Never mock domain entities, value objects, or private internal methods.
-- **Speed**: Domain unit tests must execute in under 5 milliseconds.
-
----
-
-## 4. Pillar 3: End-to-End (E2E) & Chaos Resilience
-
-### 4.1 Golden Path Verification
-Verify complete customer journeys across all polyglot microservice boundaries from ingress to database commit and event bus publication.
-
-### 4.2 Mandatory Chaos Tests
-1. **Concurrency Double-Spend**: 20 threads simultaneously purchasing the last 3 inventory items. Exactly 3 succeed; 17 receive HTTP 409 Conflict.
-2. **Distributed Saga Compensation**: Mid-transaction failure triggers backward compensating transactions, leaving zero orphaned reservations.
-3. **Circuit Breaker Tripping**: 5 consecutive downstream timeouts trip state to `OPEN`, immediately returning fail-fast errors without thread starvation.
-4. **Singleflight Deduplication**: 50 concurrent requests for an uncached item coalesce into exactly 1 backend query.
-5. **Clock Skew Tolerance**: Tokens expiring within 10 seconds leeway are accepted; tokens beyond 10s are rejected.
+### Pillar 5: API & Contract Governance
+- **Protobuf v3 & gRPC**: Schemas versioned in canonical repository with `buf lint` and `buf breaking` checks.
+- **CloudEvents v1.0**: Standardized JSON/Protobuf envelopes for asynchronous messaging across Kafka, NATS, and Redis Streams.
+- **RFC 7807 Problem Details**: Standardized HTTP error format across all REST endpoints.
 
 ---
 
-## 5. Pillar 4: Ferrox Sentinel Security (OWASP WSTG)
+## 3. Layer 2: Polyglot Implementation Matrix
 
-### 5.1 Shannon Entropy Inspection
-Shannon entropy measures information density in bits per character:
-$$H = - \sum_{i=1}^{n} P(c_i) \log_2 P(c_i)$$
-
-- Natural language and standard query strings typically score $H \le 4.2$.
-- Obfuscated shellcode, polymorphic payloads, and encrypted strings exhibit high randomness ($H > 4.8$).
-- The Sentinel Threat Filter blocks requests exceeding $H > 4.8$ with HTTP 403 Forbidden.
-
-### 5.2 PASETO v4 Cryptographic Hardening
-- **Zero-Entropy Key Rejection**: Symmetric 256-bit keys with low entropy or repeated bytes are rejected at boot.
-- **Authenticated Footers**: PASETO v4 local tokens authenticate the footer via Additional Authenticated Data (AAD) in XChaCha20-Poly1305. Tampered footers trigger decryption failure.
-- **Clock Skew Leeway**: Strict verification of `exp` and `nbf` claims with a 10-second limit.
-
-### 5.3 Concurrency & Lock Audits
-- Distributed operations on shared state must acquire a Redis Redlock or database row lock (`SELECT ... FOR UPDATE`).
-- High-frequency read queries must use a `SingleflightController` to eliminate thundering herd attacks.
-
-### 5.4 Constant-Time Execution & Memory Bounds
-- All secret and hash comparisons must use constant-time algorithms to eliminate timing side channels.
-- Sensitive credentials must be wrapped in `SealedToken` abstractions that zeroize memory upon drop.
+| Concept | Rust Core Server | Rust Wasm UI | TypeScript / NestJS | Python | PHP Modern | Java 21+ |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Value Object** | `struct Newtype(T)` | `struct Newtype(T)` | `class` with `readonly` | Frozen Pydantic v2 | `final readonly class` | Java `record` |
+| **Aggregate** | Struct with private state | `Signal<ComponentState>` | `@AggregateRoot()` class | Dataclass + private fields | Aggregate Root class | Class + typed UUID |
+| **Domain Event**| `pub enum DomainEvent` | Reactive Signal dispatch | Class extending `DomainEvent` | Frozen Pydantic model | `DomainEventInterface` | `sealed interface` |
+| **Repository** | `pub trait Repo: Send+Sync`| In-memory store / IndexedDB | Abstract class port | `typing.Protocol` | `interface RepoInterface` | `public interface Repo` |
+| **Concurrency** | Tokio async / channels | Event loop / AnimationFrame| Async/Await Promises | `asyncio` / AnyIO | RoadRunner / Swoole workers | Virtual Threads (Loom) |
+| **Native Interop**| Native C-ABI (`extern "C"`) | `wasm-bindgen` / `web-sys` | Node-API (`napi-rs`) | PyO3 (GIL release) | `ext-php-rs` / FFI | Panama (`Arena`, `Segment`) |
+| **Mutation Tool**| `cargo mutants` | Headless Wasm tests | `npx stryker run` | `mutmut run` | `vendor/bin/infection` | `mvn pitest:mutationCoverage`|
 
 ---
 
-## 6. Polyglot Inter-Language Connectors
+## 4. Low-Level Implementation Idioms by Language
 
-1. **In-Process Zero-Copy FFI**:
-   - Rust exports functions via `extern "C"` C-ABI.
-   - Java 21 Project Panama binds off-heap buffers via `Arena` and `MemorySegment`.
-   - Python binds via PyO3 with GIL release (`py.allow_threads`).
-   - Node binds via `napi-rs` with `BufferSlice`.
-2. **Synchronous RPC**:
-   - gRPC over HTTP/2 with Protocol Buffers v3 defined in canonical `CONNECTOR_CONTRACT.proto`.
-3. **Asynchronous Messaging**:
-   - CloudEvents v1.0 standard JSON/Protobuf envelopes on Kafka, NATS JetStream, or Redis Streams.
+### 4.1 🦀 Rust Core Server (`ferrox`, `ferrox-core`)
+- Target: 1,000,000 RPS with sub-millisecond p99 latency.
+- Memory: Zero-alloc slicing with `bytes::Bytes`, arena allocators (`bumpalo`), cache-line alignment `#[repr(align(64))]`.
+- Concurrency: Tokio async runtime, lock-free queues (`crossbeam`), read-heavy `arc_swap::ArcSwap`.
+- Safety: `#![forbid(unsafe_code)]`, zero `unwrap()`/`expect()`, typed errors via `thiserror`.
+
+### 4.2 🎨 Rust WebAssembly UI (`ferrox-front`, `ferrox-codex`)
+- Zero Virtual DOM and zero Node.js runtime dependencies.
+- Fine-grained reactivity powered by `Signal<T>` and `create_effect`.
+- 60 FPS rendering budget (<16.6ms frame budget).
+- High-performance dark-mode SVG vector rendering for charts and Mermaid diagrams.
+- Binary size optimization: `opt-level = 'z'`, LTO, and `wasm-opt -Oz`.
+
+### 4.3 ⚡ TypeScript & NestJS (`nestjs-yalc`, `ferrox-node`)
+- Modular Hexagonal Onion Architecture conforming to YALC standards.
+- CQRS Command and Query separation via `@CommandHandler()` and `@QueryHandler()`.
+- High-speed FFI connection to Rust core via Node-API (`napi-rs`).
+- Strict typing (`noImplicitAny`, `strictNullChecks`), Zod/Class-Validator schemas, RFC 7807 global exception filters.
+
+### 4.4 🐍 Python (`ferrox-py`)
+- Modern Python 3.12+ with PEP 695 type parameter syntax and `mypy --strict`.
+- Frozen Pydantic v2 value objects and domain entities.
+- High-performance native extensions via PyO3 with explicit GIL release (`py.allow_threads`).
+- Non-blocking `asyncio` execution, Redis Redlock mutual exclusion, and property-based testing (`hypothesis`).
+
+### 4.5 🐘 PHP Modern (`ferrox-php`)
+- PHP 8.4: `declare(strict_types=1);`, `final readonly class`, typed enums, union/intersection types.
+- Distributed Saga Orchestration: `SagaStepInterface` with forward `execute()` and backward `compensate()`.
+- Static analysis at PHPStan Level 9 and Infection mutation testing ($\ge 85\%$ MSI).
+- PSR-7/15 HTTP middleware pipeline with PASETO v4 token verification.
+
+### 4.6 ☕ Java 21+ (`ferrox-java`)
+- Project Loom: One Virtual Thread per request (`Executors.newVirtualThreadPerTaskExecutor()`).
+- Structured Concurrency: `StructuredTaskScope.ShutdownOnFailure` for coordinated async fan-outs.
+- Project Panama: Zero-copy native FFI to Rust core via `Arena.ofConfined()` and `MemorySegment`.
+- Immutable domain models using Java Records and Sealed Interface Algebraic Data Types.
+- Architectural boundary enforcement with ArchUnit tests.
