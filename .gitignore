@@ -9,3 +9,6 @@ target/
 node_modules/
 vendor/
 .agents/plans/
+dist/
+build/
+*.egg-info/
