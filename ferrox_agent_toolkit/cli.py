@@ -6,7 +6,7 @@ import sys
 import shutil
 from pathlib import Path
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
 HELP_TEXT = f"""

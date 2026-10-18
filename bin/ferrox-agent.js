@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 const HELP_TEXT = `

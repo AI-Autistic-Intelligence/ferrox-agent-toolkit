@@ -1,6 +1,6 @@
 [package]
 name = "ferrox-agent-toolkit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Ferrox Autonomous Agent Engineering Toolkit: Dual-layer Agile Scrum, Pure DDD, 100% TDD, and OWASP WSTG Sentinel architecture"
 license = "MIT"
