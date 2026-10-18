@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ferrox-agent-toolkit"
+version = "0.1.0"
+description = "Ferrox Autonomous Agent Engineering Toolkit: Dual-layer Agile Scrum, Pure DDD, 100% TDD, and OWASP WSTG Sentinel architecture"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "AI Autistic Intelligence", email = "info@ferrox-rust.dev" }
+]
+keywords = ["ferrox", "agents", "ai", "toolkit", "scrum", "ddd", "tdd", "wstg"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.scripts]
+ferrox-agent = "ferrox_agent_toolkit.cli:main"
+ferrox-agent-toolkit = "ferrox_agent_toolkit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit"
+Repository = "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit.git"
+Issues = "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit/issues"

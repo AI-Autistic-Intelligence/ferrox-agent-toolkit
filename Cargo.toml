@@ -1,0 +1,22 @@
+[package]
+name = "ferrox-agent-toolkit"
+version = "0.1.0"
+edition = "2021"
+description = "Ferrox Autonomous Agent Engineering Toolkit: Dual-layer Agile Scrum, Pure DDD, 100% TDD, and OWASP WSTG Sentinel architecture"
+license = "MIT"
+repository = "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit"
+homepage = "https://ferrox-rust.dev"
+documentation = "https://docs.ferrox-rust.dev"
+readme = "README.md"
+keywords = ["ferrox", "agents", "ai", "toolkit", "scrum"]
+categories = ["development-tools", "command-line-utilities"]
+
+[lib]
+name = "ferrox_agent_toolkit"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ferrox-agent"
+path = "src/main.rs"
+
+[dependencies]

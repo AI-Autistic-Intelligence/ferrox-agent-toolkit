@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# Ferrox Agent Toolkit shell runner
+DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+if command -v node >/dev/null 2>&1; then
+    exec node "$DIR/bin/ferrox-agent.js" "$@"
+elif command -v python3 >/dev/null 2>&1; then
+    exec python3 "$DIR/ferrox_agent_toolkit/cli.py" "$@"
+elif command -v python >/dev/null 2>&1; then
+    exec python "$DIR/ferrox_agent_toolkit/cli.py" "$@"
+else
+    echo "Error: Node.js or Python required to run ferrox-agent." >&2
+    exit 1
+fi

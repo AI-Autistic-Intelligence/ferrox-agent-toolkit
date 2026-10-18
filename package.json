@@ -1,0 +1,48 @@
+{
+  "name": "ferrox-agent-toolkit",
+  "version": "0.1.0",
+  "description": "Ferrox Autonomous Agent Engineering Toolkit: Dual-layer Agile Scrum, Pure DDD, 100% TDD, and OWASP WSTG Sentinel architecture for AI coding agents",
+  "main": "bin/ferrox-agent.js",
+  "bin": {
+    "ferrox-agent": "bin/ferrox-agent.js",
+    "ferrox-agent-toolkit": "bin/ferrox-agent.js"
+  },
+  "keywords": [
+    "ferrox",
+    "agents",
+    "ai",
+    "toolkit",
+    "scrum",
+    "ddd",
+    "tdd",
+    "wstg",
+    "antigravity",
+    "claude",
+    "gemini",
+    "orchestrator"
+  ],
+  "author": "AI Autistic Intelligence",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit/issues"
+  },
+  "homepage": "https://github.com/AI-Autistic-Intelligence/ferrox-agent-toolkit#readme",
+  "files": [
+    "bin",
+    "rules",
+    "skills",
+    "agents",
+    "scripts",
+    "plugin.json",
+    "openpack.json",
+    "agents.json",
+    "AGENTS.md",
+    "HANDBOOK.md",
+    "README.md",
+    "LICENSE"
+  ]
+}
